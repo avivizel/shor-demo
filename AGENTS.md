@@ -23,7 +23,7 @@ This file provides guidance to agents when working with code in this repository.
 - Never add IBM Quantum calls or `qiskit_ibm_runtime` imports to app code; the quantum simulation stays local. `shors-algorithm.ipynb` is reference material with IBM Runtime cells that need credentials, and nothing at runtime depends on it.
 - The only outbound call is the optional watsonx.ai explainer (`watsonx_explainer.py`, `POST /api/explain`). It sends only the student's question text, never the message or ciphertext. Credentials come from env vars only (`WATSONX_API_KEY`, `WATSONX_PROJECT_ID`, optional `WATSONX_URL`, `WATSONX_MODEL_ID`). Never hardcode them or log them. Without them the endpoint returns a Hebrew 400 and the rest of the app works.
 - The circuit is hand-built for N=15, a=2. `build_order_finding_circuit()` applies only multipliers 2 and 4 and silently skips any other value. Changing N, A, or TARGET_QUBITS requires rewriting the gates.
-- Bind only to 127.0.0.1 (project security rule). Never 0.0.0.0.
+- Bind only to 127.0.0.1 (project security rule). Never 0.0.0.0. The one approved exception (written approval from the security owner) is the container in `Dockerfile` for Code Engine: gunicorn binds explicitly to 127.0.0.1 and the container's own IP, never to 0.0.0.0, and the app is deployed with `--visibility=private`. See `DEPLOY.md`. `python app.py` stays 127.0.0.1 only.
 - Results are deterministic (fixed seed: `AerSimulator(seed_simulator=15)`). Retrying the same input gives the same result, so assert exact values.
 - `.bob/mcp.json` contains a plaintext token header. Never copy its values into code or docs.
 

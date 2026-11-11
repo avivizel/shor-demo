@@ -9,9 +9,10 @@ COPY app.py rsa_toy.py shor_local.py watsonx_explainer.py ./
 COPY static ./static
 COPY templates ./templates
 
-# משתמש לא-root (הקוד נטען לקריאה בלבד על ידי המשתמש הזה)
+# משתמש לא-root
 USER 1001
 
-# Code Engine מגדיר PORT. השרת נשאר על 127.0.0.1, בלי 0.0.0.0
+# Code Engine מגדיר PORT. השרת קשור לכתובות מפורשות בלבד: loopback וכתובת ה-IP של הקונטיינר.
+# אין קשירה ל-0.0.0.0 (כל הממשקים).
 ENV PORT=8080
-CMD ["sh", "-c", "exec gunicorn --bind 127.0.0.1:${PORT} --workers 1 --threads 4 --timeout 120 app:app"]
+CMD ["sh", "-c", "exec gunicorn --bind 127.0.0.1:${PORT} --bind $(python -c 'import socket;print(socket.gethostbyname(socket.gethostname()))'):${PORT} --workers 1 --threads 4 --timeout 120 app:app"]
