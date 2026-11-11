@@ -23,6 +23,13 @@ const compare = document.querySelector("#compare");
 const modal = document.querySelector("#modal");
 const modalTitle = document.querySelector("#modal-title");
 const modalCode = document.querySelector("#modal-code");
+const askForm = document.querySelector("#ask-form");
+const questionBox = document.querySelector("#question");
+const askCount = document.querySelector("#ask-count");
+const askBtn = document.querySelector("#ask-btn");
+const askStatus = document.querySelector("#ask-status");
+const askError = document.querySelector("#ask-error");
+const askAnswer = document.querySelector("#ask-answer");
 
 let sentText = "";
 let cipherDigits = [];
@@ -326,3 +333,36 @@ document.querySelector("#reset-btn").addEventListener("click", () => {
 
 messageBox.addEventListener("input", updateCount);
 updateCount();
+
+function updateAskCount() {
+  askCount.textContent = `${questionBox.value.length} מתוך 300 תווים`;
+}
+
+askForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const question = questionBox.value.trim();
+  askError.hidden = true;
+  askAnswer.hidden = true;
+  if (!question) {
+    askError.textContent = "כתבו שאלה.";
+    askError.hidden = false;
+    return;
+  }
+  askBtn.disabled = true;
+  askStatus.hidden = false;
+  try {
+    const data = await postJson("/api/explain", { question });
+    askAnswer.replaceChildren();
+    addParagraph(askAnswer, [{ text: data.answer }]);
+    askAnswer.hidden = false;
+  } catch (error) {
+    askError.textContent = error.message || "אין קשר לשרת המקומי.";
+    askError.hidden = false;
+  } finally {
+    askBtn.disabled = false;
+    askStatus.hidden = true;
+  }
+});
+
+questionBox.addEventListener("input", updateAskCount);
+updateAskCount();

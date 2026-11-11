@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans+Hebrew:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=3) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=4) }}">
 </head>
 <body>
   <header class="shell">
@@ -167,6 +167,24 @@
       </section>
     </div>
 
+    <section class="card" id="ask-card">
+      <h2>שאלו את המסביר של watsonx.ai</h2>
+      <p>
+        יש משהו שלא הבנתם? כתבו שאלה על RSA, על אלגוריתם שור או על הדף הזה.
+        רק טקסט השאלה נשלח ל-watsonx.ai של IBM. ההודעה הסודית והספרות המוצפנות נשארות במחשב הזה.
+        הסימולטור הקוונטי ממשיך לרוץ מקומית.
+      </p>
+      <form id="ask-form">
+        <label for="question">השאלה</label>
+        <textarea id="question" name="question" maxlength="300" rows="3"></textarea>
+        <p class="hint" id="ask-count"></p>
+        <button class="primary" type="submit" id="ask-btn">שאלו</button>
+      </form>
+      <p class="status" id="ask-status" hidden>המסביר חושב…</p>
+      <p class="error" id="ask-error" hidden></p>
+      <div class="example" id="ask-answer" hidden></div>
+    </section>
+
     <footer class="sources">
       <p>
         המעגל לקוח ממדריך Shor's algorithm של IBM Quantum, והוא רץ כאן על סימולטור מקומי בלבד.
@@ -191,6 +209,6 @@
     </div>
   </div>
 
-  <script src="{{ url_for('static', filename='app.js', v=3) }}"></script>
+  <script src="{{ url_for('static', filename='app.js', v=4) }}"></script>
 </body>
 </html>

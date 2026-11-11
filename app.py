@@ -5,6 +5,7 @@
 
 הדף נפתח בדפדפן בכתובת http://127.0.0.1:5000
 הסימולטור רץ על המחשב הזה. אין פנייה ל-IBM Quantum.
+המסביר (watsonx.ai) הוא אופציונלי ופועל רק אם הוגדרו משתני הסביבה שלו.
 """
 
 import os
@@ -16,6 +17,7 @@ from flask import Flask, jsonify, render_template, request
 
 from rsa_toy import ToyRsaError, encrypt_message
 from shor_local import ShorFailed, run_shor
+from watsonx_explainer import MAX_QUESTION_LENGTH, ExplainerError, explain
 
 ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
@@ -68,6 +70,25 @@ def shor():
         return jsonify({"error": "הסימולטור נתקל בבעיה. אפשר לנסות שוב."}), 500
     result["qiskit_code"] = _source("shor_local.py")
     return jsonify(result)
+
+
+@app.post("/api/explain")
+def explain_question():
+    payload = request.get_json(silent=True) or {}
+    question = payload.get("question", "")
+    if not isinstance(question, str) or not question.strip():
+        return jsonify({"error": "כתבו שאלה."}), 400
+    question = question.strip()
+    if len(question) > MAX_QUESTION_LENGTH:
+        return jsonify({"error": f"השאלה ארוכה מדי. עד {MAX_QUESTION_LENGTH} תווים."}), 400
+    try:
+        answer = explain(question)
+    except ExplainerError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except Exception:
+        app.logger.exception("שגיאה במסביר")
+        return jsonify({"error": "המסביר נתקל בבעיה. אפשר לנסות שוב."}), 500
+    return jsonify({"answer": answer})
 
 
 def _open_browser(port):

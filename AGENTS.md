@@ -20,7 +20,8 @@ This file provides guidance to agents when working with code in this repository.
 - Import direction is app → shor_local → rsa_toy. rsa_toy must never import shor_local (circular).
 
 ## Hard Constraints
-- Local only. Never add IBM Quantum calls or `qiskit_ibm_runtime` imports to app code; the UI promises no contact with IBM. `shors-algorithm.ipynb` is reference material with IBM Runtime cells that need credentials, and nothing at runtime depends on it.
+- Never add IBM Quantum calls or `qiskit_ibm_runtime` imports to app code; the quantum simulation stays local. `shors-algorithm.ipynb` is reference material with IBM Runtime cells that need credentials, and nothing at runtime depends on it.
+- The only outbound call is the optional watsonx.ai explainer (`watsonx_explainer.py`, `POST /api/explain`). It sends only the student's question text, never the message or ciphertext. Credentials come from env vars only (`WATSONX_API_KEY`, `WATSONX_PROJECT_ID`, optional `WATSONX_URL`, `WATSONX_MODEL_ID`). Never hardcode them or log them. Without them the endpoint returns a Hebrew 400 and the rest of the app works.
 - The circuit is hand-built for N=15, a=2. `build_order_finding_circuit()` applies only multipliers 2 and 4 and silently skips any other value. Changing N, A, or TARGET_QUBITS requires rewriting the gates.
 - Bind only to 127.0.0.1 (project security rule). Never 0.0.0.0.
 - Results are deterministic (fixed seed: `AerSimulator(seed_simulator=15)`). Retrying the same input gives the same result, so assert exact values.
