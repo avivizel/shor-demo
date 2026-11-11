@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>איך אלגוריתם שור פותח הודעה מוצפנת</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans+Hebrew:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=3) }}">
+</head>
+<body>
+  <header class="shell">
+    <div class="shell-bar">
+      <p class="eyebrow">מדגים לימודי להצפנה</p>
+    </div>
+    <div class="page-heading">
+      <h1>איך אלגוריתם שור פותח הודעה מוצפנת</h1>
+      <p class="lede">
+        הודעות סודיות באינטרנט ננעלות במנעול בשם RSA.
+        המנעול חזק כי קשה לפרק מספר גדול לשני מספרים שכפולתם נותנת אותו.
+        בשנת 1994 פיטר שור הראה שמחשב קוונטי יכול למצוא את הפירוק הרבה יותר מהר.
+        כאן המפתח הוא 15, בכוונה: ככה הסימולטור על המחשב שלך מספיק לסיים.
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <section class="card" id="compose">
+      <p class="step">שלב 1</p>
+      <h2>כתבו הודעה סודית</h2>
+      <p>אפשר אותיות בעברית, גם אותיות סופיות, רווח, ספרות, ואת הסימנים <span dir="ltr">. , ! ?</span></p>
+      <form id="message-form">
+        <label for="message">ההודעה</label>
+        <textarea id="message" name="message" maxlength="120" rows="4">שלום אבי</textarea>
+        <p class="hint" id="char-count"></p>
+        <p class="step">שלב 2</p>
+        <h2>הצפנה במנעול RSA</h2>
+        <button class="primary" type="submit" id="encrypt-btn">הצפן את ההודעה</button>
+      </form>
+      <p class="error" id="error" hidden></p>
+    </section>
+
+    <div id="after-encrypt" hidden>
+      <section class="card" id="explain-rsa">
+        <p class="step">שלב 3</p>
+        <h2>איך ההצפנה עבדה</h2>
+        <p>
+          המפתח הציבורי הוא שני מספרים שכולם רשאים לראות:
+          <strong>N = 15</strong> ו-<strong>e = 3</strong>.
+          איתם נועלים. עדיין לא פותחים.
+        </p>
+        <p>
+          RSA יודע להצפין רק מספר שקטן מ-N.
+          אות שלמה לא נכנסת לתוך 15, ולכן כל תו קודם הופך למספר מקום באלפבית,
+          ואז לשתי ספרות. כל ספרה ננעלת לבד.
+        </p>
+        <p>
+          הנוסחה לספרה m היא: מחשבים את m בחזקת e, ומחלקים ב-N.
+          מה שנשאר כשארית הוא המספר המוצפן.
+        </p>
+        <div class="example" id="walkthrough"></div>
+        <aside class="note">
+          <strong>חשוב לדעת.</strong>
+          במפתח הקטן הזה המפתח הסודי יוצא גם הוא 3.
+          אותה חזקה גם נועלת וגם פותחת.
+          במפתח אמיתי המספר הסודי שונה, ואי אפשר לחשב אותו בלי לפרק את N.
+          בדף הזה לא משתמשים בקיצור הזה.
+          הדרך שרצה אחר כך היא הדרך האמיתית: מפרקים את 15, מחשבים את המפתח הסודי מהגורמים, ורק אז פותחים.
+        </aside>
+        <button class="secondary" type="button" id="show-python">הצג את קוד הפייתון</button>
+      </section>
+
+      <section class="card">
+        <p class="step">שלב 4</p>
+        <h2>ההודעה המוצפנת</h2>
+        <p>כל תו ננעל לשתי שאריות. אחרי ההסבר, זו כל ההודעה כמחרוזת אחת של מספרים.</p>
+        <p class="cipher-string" id="cipher-string" dir="ltr"></p>
+        <div class="cipher-grid" id="cipher-grid"></div>
+      </section>
+
+      <section class="card" id="classical">
+        <p class="step">שלב 5</p>
+        <h2>כמה זמן ייקח למחשב רגיל</h2>
+        <p>
+          מחשב רגיל פורץ את RSA כשהוא מוצא את שני הגורמים של N.
+          את 15 הוא מפרק בפחות משנייה, אז אין טעם להריץ כאן ניחושים:
+          הם היו מגלים את הגורמים לפני אלגוריתם שור.
+        </p>
+        <p>
+          לכן ההדמיה היא על מפתח בגודל שאנשים באמת משתמשים בו: 2048 סיביות.
+          זה מספר עם מאות ספרות.
+        </p>
+        <p>
+          השיטה הקלאסית הכי מהירה שידועה לפירוק כזה נקראת GNFS,
+          ראשי תיבות של General Number Field Sieve, ובעברית: הנפה הכללית של שדות מספרים.
+          מחשב רגיל לא מנסה בה לחלק את המספר בכל מחלק אפשרי, אחד אחרי השני.
+          במקום זה הוא אוסף הרבה התאמות קטנות בין מספרים, ומהן מרכיב את שני הגורמים.
+          גם כך, על מפתח של 2048 סיביות, זה נשאר חיפוש עצום.
+        </p>
+        <button class="primary" type="button" id="classical-btn">הראה את הערכת הזמן</button>
+        <div id="classical-sim" hidden>
+          <p id="classical-status">מתחילים חיפוש על מפתח ענק…</p>
+          <div class="meter" aria-hidden="true"><span id="classical-bar"></span></div>
+          <p class="hint">ניסיונות שנבדקו בהדמיה: <strong id="classical-attempts">0</strong></p>
+        </div>
+        <div class="estimate" id="classical-result" hidden>
+          <p class="estimate-kicker">אומדן, לא שעון עצר</p>
+          <p class="estimate-time">כ־10 בחזקת 15 שנים</p>
+          <p>
+            מיליון מיליארדי שנים, בערך פי 70,000 מגיל היקום.
+            זה סדר הגודל של GNFS, הנפה הכללית של שדות מספרים:
+            השיטה הקלאסית המהירה ביותר שידועה לפירוק מפתח RSA של 2048 סיביות.
+          </p>
+          <p class="hint">ההדמיה נעצרת אחרי כמה שניות. חיפוש אמיתי על מפתח כזה לא היה נעצר.</p>
+        </div>
+      </section>
+
+      <section class="card" id="shor-launch">
+        <p class="step">שלב 6</p>
+        <h2>הפעלת האלגוריתם של שור</h2>
+        <p>
+          הכפתור מריץ מעגל קוונטי על סימולטור במחשב הזה.
+          אין פנייה למחשב של IBM. הסימולטור מחקה את המדידות, ואז פייתון רגיל מחלץ מהן את הגורמים.
+        </p>
+        <button class="primary" type="button" id="shor-btn" disabled>הפעל את האלגוריתם של שור</button>
+        <p class="hint" id="shor-hint">קודם מריצים את הערכת הזמן של המחשב הרגיל.</p>
+        <p class="status" id="shor-status" hidden>הסימולטור מריץ את המעגל על המחשב שלך. זה בדרך כלל לוקח כמה שניות.</p>
+      </section>
+    </div>
+
+    <div id="after-shor" hidden>
+      <section class="card" id="explain-shor">
+        <p class="step">שלב 7</p>
+        <h2>איך אלגוריתם שור עבד</h2>
+        <p>
+          שור לא מנחש גורמים אחד-אחד. הוא הופך את הבעיה לשאלה על מחזור:
+          החזקה הקטנה ביותר r כך ש-a בחזקת r, בחלוקה ב-N, נותנת שארית 1.
+        </p>
+        <ol class="plain">
+          <li>בוחרים מספר עוזר. כאן a = 2, ואין לו גורם משותף עם 15.</li>
+          <li>הקיוביטים מחזיקים הרבה חזקות בבת אחת. זה נקרא סופרפוזיציה. מדידה בסוף נותנת תשובה אחת, לכן מריצים הרבה מדידות.</li>
+          <li>התמרת פורייה קוונטית מוצאת את הקצב שחוזר, כמו לזהות כל כמה זמן צליל חוזר.</li>
+          <li>מהמדידה מקבלים שבר. אם הוא לא עגול, מקרבים אותו לשבר שהמכנה שלו קטן מ-15. המכנה הוא ניחוש למחזור.</li>
+          <li>אם המחזור זוגי, מוצאים את המספר הגדול ביותר שמחלק גם את N וגם את a בחזקת r/2 פחות 1. זה גורם. מחלקים את N בגורם ומקבלים את השני.</li>
+          <li>מהגורמים מחשבים את המפתח הסודי, ופותחים כל ספרה.</li>
+        </ol>
+        <div id="shor-story"></div>
+        <button class="secondary" type="button" id="show-qiskit">הצג את קוד Qiskit</button>
+      </section>
+
+      <section class="card success-card">
+        <p class="step">שלב 8</p>
+        <h2>ההודעה אחרי שבירת ההצפנה</h2>
+        <p class="recovered" id="recovered"></p>
+      </section>
+
+      <section class="card">
+        <p class="step">שלב 9</p>
+        <h2>השוואת זמן העבודה</h2>
+        <div class="compare" id="compare"></div>
+        <p>
+          על המספר 15 הסימולטור לא מנצח מחשב רגיל. הוא רק מחקה מחשב קוונטי, וחיקוי הוא איטי.
+          היתרון של שור מופיע כשהמספר ענק, וגם אז צריך מחשב קוונטי גדול שעוד אין היום.
+        </p>
+        <button class="secondary" type="button" id="reset-btn">התחילו מהודעה חדשה</button>
+      </section>
+    </div>
+
+    <footer class="sources">
+      <p>
+        המעגל לקוח ממדריך Shor's algorithm של IBM Quantum, והוא רץ כאן על סימולטור מקומי בלבד.
+        אומדן 8 השעות: Gidney ו-Ekerå, 2021.
+        אומדן 2025 של Gidney מדבר על פחות משבוע עם פחות ממיליון קיוביטים.
+        אומדן המחשב הרגיל הוא סדר גודל מקובל לשיטת GNFS, הנפה הכללית של שדות מספרים, על מפתח של 2048 סיביות. זו לא מדידה.
+      </p>
+    </footer>
+  </main>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <header class="modal-bar">
+        <div>
+          <h3 id="modal-title"></h3>
+          <p class="hint">זה הקוד שרץ עכשיו על המחשב שלך.</p>
+        </div>
+        <button class="secondary" type="button" id="modal-close">סגור</button>
+      </header>
+      <pre class="code" id="modal-code"></pre>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='app.js', v=3) }}"></script>
+</body>
+</html>
