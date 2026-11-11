@@ -1,0 +1,9 @@
+.git
+.bob
+.venv
+venv
+__pycache__
+*.pyc
+.env
+*.ipynb
+AGENTS.md
