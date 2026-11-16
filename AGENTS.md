@@ -17,12 +17,14 @@ This file provides guidance to agents when working with code in this repository.
 - `rsa_toy.py`: pure-Python toy RSA (N=15, E=3, no Qiskit). Each character maps to its alphabet index, is split into two digits, and each digit is encrypted on its own. Entry point: `encrypt_message()`.
 - `shor_local.py`: Qiskit order-finding circuit for a=2 mod 15 on `AerSimulator`, then factors → `private_exponent` → `decrypt_digits` (imported from rsa_toy). Entry point: `run_shor()`.
 - `app.py`: Flask routes `/`, `POST /api/encrypt`, `POST /api/shor`. Frontend is `templates/index.html` + `static/app.js` (vanilla JS, no build step).
+- `auth.py`: optional OIDC login (Authlib), called from `app.py` via `init_auth(app)`. Active only when `OIDC_*` and `SECRET_KEY` env vars are set. With `SHOR_DEMO_REQUIRE_AUTH=1` and no config it returns 503 for everything (fail closed). Without either, local mode is unchanged.
 - Import direction is app → shor_local → rsa_toy. rsa_toy must never import shor_local (circular).
 
 ## Hard Constraints
 - Never add IBM Quantum calls or `qiskit_ibm_runtime` imports to app code; the quantum simulation stays local. `shors-algorithm.ipynb` is reference material with IBM Runtime cells that need credentials, and nothing at runtime depends on it.
 - The only outbound call is the optional watsonx.ai explainer (`watsonx_explainer.py`, `POST /api/explain`). It sends only the student's question text, never the message or ciphertext. Credentials come from env vars only (`WATSONX_API_KEY`, `WATSONX_PROJECT_ID`, optional `WATSONX_URL`, `WATSONX_MODEL_ID`). Never hardcode them or log them. Without them the endpoint returns a Hebrew 400 and the rest of the app works.
 - The circuit is hand-built for N=15, a=2. `build_order_finding_circuit()` applies only multipliers 2 and 4 and silently skips any other value. Changing N, A, or TARGET_QUBITS requires rewriting the gates.
+- Never deploy `shor-demo` with `--visibility public` unless OIDC login is configured, `SHOR_DEMO_REQUIRE_AUTH=1` is set, and the security owner approved it in writing. See `DEPLOY.md`.
 - Bind only to 127.0.0.1 (project security rule). Never 0.0.0.0. The one approved exception (written approval from the security owner) is the container in `Dockerfile` for Code Engine: gunicorn binds explicitly to 127.0.0.1 and the container's own IP, never to 0.0.0.0, and the app is deployed with `--visibility=private`. See `DEPLOY.md`. `python app.py` stays 127.0.0.1 only.
 - Results are deterministic (fixed seed: `AerSimulator(seed_simulator=15)`). Retrying the same input gives the same result, so assert exact values.
 - `.bob/mcp.json` contains a plaintext token header. Never copy its values into code or docs.

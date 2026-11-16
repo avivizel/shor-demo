@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>איך אלגוריתם גרובר מוצא סוד אחד מתוך הרבה</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans+Hebrew:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=4">
+</head>
+<body>
+  <header class="shell">
+    <div class="shell-bar">
+      <p class="eyebrow">מדגים לימודי להצפנה</p>
+    </div>
+    <div class="page-heading">
+      <h1>איך אלגוריתם גרובר מוצא סוד אחד מתוך הרבה</h1>
+      <p class="lede">
+        נניח שיש הרבה סודות, ורק אחד מהם נכון. המכונה יכולה לבדוק סוד אחד בכל פעם.
+        גרובר מוצא את הסוד הנכון בהרבה פחות בדיקות מהדרך הרגילה.
+        אפשר לנסות הכול בדפדפן, בלי מחשב קוונטי.
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <section class="card" id="problem">
+      <p class="step">שלב 1</p>
+      <h2>מה הבעיה?</h2>
+      <p>
+        נניח שיש לנו <strong>N</strong> סודות, ואחד מהם הוא "הסוד הנכון". יש לנו מכונה שיודעת לבדוק סוד <strong>אחד</strong> בכל פעם,
+        ולומר אם הוא נכון או לא. אין לנו דרך לדעת מראש איזה סוד נכון, והמטרה היא למצוא אותו.
+      </p>
+      <ul class="plain">
+        <li>
+          <strong>בדרך הרגילה:</strong> במקרה הגרוע בודקים את כל ה־N הסודות, אחד אחרי השני. אם יש מיליון סודות, צריך מיליון בדיקות.
+        </li>
+        <li>
+          <strong>בדרך של גרובר:</strong> צריך בערך <span class="math">√N</span> בדיקות. אם יש מיליון סודות, מספיק כ־1,000 בדיקות.
+        </li>
+      </ul>
+      <p>
+        <span class="math">√N</span> היא השורש הריבועי של N, כלומר המספר שכשמכפילים אותו בעצמו מקבלים את N.
+        למשל, <span class="math">√16 = 4</span> כי <span class="math">4 × 4 = 16</span>.
+      </p>
+    </section>
+
+    <section class="card" id="weights">
+      <p class="step">שלב 2</p>
+      <h2>הרעיון: "משקלים" במקום הסתברויות</h2>
+      <p>
+        במחשב קוונטי, לכל סוד יש <strong>משקל</strong>. קוראים לו <strong>אמפליטודה</strong>. ההסתברות לקבל סוד מסוים
+        מחושבת לפי המשקל שלו: <strong>הסתברות = משקל × משקל</strong>.
+      </p>
+      <p>
+        ההבדל החשוב: המשקל יכול להיות <strong>שלילי</strong>. לכן משקלים יכולים <strong>להתחזק</strong> או <strong>להתבטל</strong>,
+        בדיוק כמו גלים במים שנפגשים. גם משקל שלילי של 0.5 נותן הסתברות של 0.25, כמו משקל חיובי של 0.5.
+      </p>
+      <p>
+        גרובר משתמש בזה כדי <strong>להגדיל</strong> את המשקל של הסוד הנכון ולהקטין את המשקל של כל השאר.
+      </p>
+    </section>
+
+    <section class="card" id="two-steps">
+      <p class="step">שלב 3</p>
+      <h2>שני שלבים שחוזרים על עצמם</h2>
+      <p>
+        כל "סיבוב" של גרובר מורכב משני שלבים. אפשר לקרוא לכל סיבוב גם "איטרציה".
+      </p>
+      <ol class="plain">
+        <li>
+          <strong>שלב א: הפיכת הסימן של הסוד הנכון.</strong> המכונה שיודעת מי הסוד הנכון הופכת את הסימן של המשקל שלו
+          (מ־חיובי לשלילי או להפך). המשקלים של כל השאר לא משתנים.
+        </li>
+        <li>
+          <strong>שלב ב: היפוך סביב הממוצע.</strong> לכל סוד, מחשבים את המשקל החדש כך:
+          <span class="math">2 × (הממוצע של כל המשקלים) − (המשקל הנוכחי)</span>.
+          בשלב הזה הסוד הנכון, שהסימן שלו הפוך, מקבל משקל <strong>גבוה מאוד</strong>.
+          כל השאר מקבלים משקל <strong>קטן יותר</strong>.
+        </li>
+      </ol>
+      <div class="example">
+        <p><strong>דוגמה קטנה עם 4 סודות:</strong> בהתחלה לכולם יש משקל 0.5. הסוד הנכון הוא הרביעי.</p>
+        <ul class="plain">
+          <li>שלב א: משקלים <span class="math">0.5, 0.5, 0.5, −0.5</span>. רק הרביעי הפך סימן.</li>
+          <li>ממוצע: <span class="math">0.25</span>.</li>
+          <li>שלב ב: לסודות 1–3 המשקל הוא <span class="math">2 × 0.25 − 0.5 = 0</span>. לסוד הנכון המשקל הוא <span class="math">2 × 0.25 − (−0.5) = 1</span>.</li>
+          <li>התוצאה: <span class="math">0, 0, 0, 1</span>. ההסתברות לסוד הנכון היא <span class="math">1 × 1 = 1</span>, כלומר 100%.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card" id="algorithm">
+      <p class="step">שלב 4</p>
+      <h2>כל האלגוריתם, שלב אחר שלב</h2>
+      <ol class="plain">
+        <li>
+          <strong>התחלה:</strong> נותנים לכל הסודות אותו משקל. כך לכל סוד יש אותה הסתברות, שהיא <span class="math">1 ÷ N</span>.
+          במחשב קוונטי זה נעשה בעזרת פעולה שנקראת שער Hadamard.
+        </li>
+        <li>
+          <strong>סיבובים:</strong> מבצעים את שני השלבים מסעיף 3 שוב ושוב. מספר הסיבובים הטוב ביותר הוא בערך
+          <span class="math">(π ÷ 4) × √N</span>. π הוא מספר קבוע שבערך שווה ל־3.14.
+        </li>
+        <li>
+          <strong>מדידה:</strong> בסוף מודדים את התוצאה. בהסתברות גבוהה מאוד נקבל את הסוד הנכון.
+        </li>
+      </ol>
+      <aside class="note">
+        <strong>שימו לב.</strong>
+        אם עושים יותר מדי סיבובים, ההסתברות <strong>יורדת</strong> שוב. לכן חשוב לעצור בזמן.
+      </aside>
+    </section>
+
+    <section class="card" id="demo">
+      <p class="step">שלב 5</p>
+      <h2>ההדגמה: נסו בעצמכם</h2>
+      <p class="hint">
+        ההדגמה מחשבת את המשקלים בדיוק לפי השלבים שראיתם. אין צורך במחשב קוונטי, והכול רץ בדפדפן.
+      </p>
+      <ol class="plain">
+        <li>הזינו כמה סודות אתם רוצים, מ־2 עד 1024.</li>
+        <li>לחצו על "יצירת סודות אקראיים". המחשב יבנה רשימה של מילים עבריות אקראיות.</li>
+        <li>בחרו איזה סוד יהיה הסוד הנכון.</li>
+        <li>לחצו על "סיבוב הבא" ושימו לב איך העמודה של הסוד הנכון גדלה בכל סיבוב.</li>
+      </ol>
+
+      <div class="controls">
+        <div>
+          <label for="sizeInput">כמות הסודות (2–1024)</label>
+          <input type="number" id="sizeInput" min="2" max="1024" step="1" placeholder="למשל 8">
+        </div>
+        <div>
+          <label for="markedSelect">הסוד הנכון</label>
+          <select id="markedSelect" disabled></select>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button id="generateBtn" type="button" class="primary">יצירת סודות אקראיים</button>
+        <button id="stepBtn" type="button" class="primary" disabled>סיבוב הבא</button>
+        <button id="resetBtn" type="button" class="secondary" disabled>התחלה מחדש</button>
+        <button id="codeBtn" type="button" class="secondary" disabled>הצגת קוד Qiskit</button>
+      </div>
+
+      <p class="error" id="errorLine" hidden></p>
+      <p class="status" id="statusLine">הזינו כמות סודות ולחצו על "יצירת סודות אקראיים".</p>
+
+      <div class="chart" id="chart" aria-label="ההסתברות לכל סוד"></div>
+    </section>
+
+    <section class="card" id="math">
+      <p class="step">שלב 6</p>
+      <h2>קצת מתמטיקה (אופציונלי)</h2>
+      <p>
+        נסמן <span class="math">sin θ = 1 ÷ √N</span>. אחרי <span class="math">k</span> סיבובים, ההסתברות לסוד הנכון היא
+        <span class="math">sin²((2k + 1) θ)</span>. אפשר לחשב את זה בעזרת טריגונומטריה, בלי לעבור על כל הסיבובים אחד אחד.
+      </p>
+      <p>
+        לדוגמה, עבור 8 סודות: אחרי סיבוב אחד ההסתברות כ־78%, ואחרי שני סיבובים כ־94.5%.
+        אחרי שלושה סיבובים היא יורדת לכ־33%. זו הסיבה שחשוב לעצור בזמן.
+      </p>
+    </section>
+
+    <section class="card" id="crypto">
+      <p class="step">שלב 7</p>
+      <h2>למה זה חשוב להצפנה?</h2>
+      <p>
+        גרובר יכול לחפש סוד מתוך רשימה מהר יותר מהדרך הרגילה, ולכן הוא מאיץ התקפות על מפתחות של הצפנה סימטרית, כמו AES.
+        במקום לבדוק את כל המפתחות, צריך רק בערך שורש של מספר המפתחות.
+      </p>
+      <p>
+        אבל גרובר לא שובר את ההצפנה לגמרי, בניגוד לשור, שמפרק מספרים גדולים לגורמים ושובר את RSA.
+        כדי להתמודד עם גרובר, מספיק להשתמש במפתחות ארוכים יותר.
+      </p>
+    </section>
+
+    <section class="card" id="ask-card">
+      <h2>שאלו את המסביר של watsonx.ai</h2>
+      <p>
+        יש משהו שלא הבנתם? כתבו שאלה על גרובר, על סופרפוזיציה או על הדף הזה.
+        רק טקסט השאלה נשלח ל-watsonx.ai של IBM. הסימולטור הקוונטי ממשיך לרוץ מקומית.
+      </p>
+      <form id="ask-form">
+        <label for="question">השאלה</label>
+        <textarea id="question" name="question" maxlength="300" rows="3"></textarea>
+        <p class="hint" id="ask-count"></p>
+        <button class="primary" type="submit" id="ask-btn">שאלו</button>
+      </form>
+      <p class="status" id="ask-status" hidden>המסביר חושב…</p>
+      <p class="error" id="ask-error" hidden></p>
+      <div class="example" id="ask-answer" hidden></div>
+    </section>
+
+
+    <footer class="sources">
+      <p>תת-פרויקט נפרד מ־shor-demo. הדף נפתח דרך השרת המקומי ב-/grover/. המסביר דורש שרת, ושאר הדף עובד גם בלעדיו.</p>
+    </footer>
+  </main>
+
+  <div id="codeModal" class="modal" hidden>
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="codeTitle">
+      <header class="modal-bar">
+        <div>
+          <h3 id="codeTitle">קוד Python עם Qiskit</h3>
+          <p class="hint">הקוד מריץ את אלגוריתם גרובר על מדמה קוונטי. צריך להתקין פעם אחת: <span class="math">pip install qiskit qiskit-aer</span></p>
+        </div>
+        <button class="secondary" type="button" id="closeBtn">סגירה</button>
+      </header>
+      <pre class="code" dir="ltr"><code id="codeText"></code></pre>
+      <div class="buttons">
+        <button class="primary" type="button" id="copyBtn">העתקת הקוד</button>
+        <button class="secondary" type="button" id="downloadBtn">טעינת הקוד לקובץ grover_search.py</button>
+      </div>
+      <p class="status" id="copyStatus" aria-live="polite" hidden></p>
+    </div>
+  </div>
+
+  <script src="qiskit-code.js?v=2"></script>
+  <script src="app.js?v=4"></script>
+</body>
+</html>

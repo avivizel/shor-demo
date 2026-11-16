@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מערכת העיצוב - אתר גרובר</title>
+  <link rel="stylesheet" href="style.css?v=3">
+  <style>
+    /* עיצוב של דף התיעוד בלבד. רכיבי האתר נטענים מ-style.css ואינם מוגדרים כאן. */
+    .doc-card h3 {
+      margin: 16px 0 8px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .doc-card h3:first-child {
+      margin-top: 0;
+    }
+    .doc-note {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .doc-code {
+      direction: ltr;
+      text-align: left;
+      margin: 0 0 12px;
+      padding: 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow: auto;
+      white-space: pre;
+    }
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .swatch {
+      background: var(--layer);
+      border: 1px solid var(--border);
+    }
+    .swatch-color {
+      height: 56px;
+      border-bottom: 1px solid var(--border);
+    }
+    .swatch-info {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+    .swatch-info code {
+      direction: ltr;
+      unicode-bidi: isolate;
+    }
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    .spec-table th,
+    .spec-table td {
+      text-align: start;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .spec-table th {
+      font-weight: 600;
+    }
+    .spec-table code {
+      direction: ltr;
+      unicode-bidi: isolate;
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 13px;
+    }
+    .ltr {
+      direction: ltr;
+      unicode-bidi: isolate;
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <h1>מערכת העיצוב של האתר</h1>
+    <p class="lead">כל הרכיבים, הצבעים והסגנונות שבאתר, עם דוגמאות חיות וקוד.</p>
+  </header>
+
+  <main>
+    <!-- ============================================================ -->
+    <!-- 1. סקירה כללית                                                -->
+    <!-- ============================================================ -->
+
+    <section class="card doc-card">
+      <h2>1. סקירה כללית של העיצוב</h2>
+      <p class="doc-note">
+        כל הצבעים מוגדרים כמשתנים ב-<span class="ltr"><code>:root</code></span> בקובץ <span class="ltr"><code>style.css</code></span>.
+        אין לשנות צבע בתוך רכיב. משנים את המשתנה.
+      </p>
+
+      <h3>צבעים</h3>
+      <div class="swatches">
+        <div class="swatch">
+          <div class="swatch-color" style="background: #161616;"></div>
+          <div class="swatch-info"><code>--text</code> · #161616<br>טקסט ראשי (צבע ראשי)</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background: #525252;"></div>
+          <div class="swatch-info"><code>--muted</code> · #525252<br>טקסט משני, תוויות</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background: #0f62fe;"></div>
+          <div class="swatch-info"><code>--blue</code> · #0f62fe<br>צבע מובהק: כפתור ראשי, מסגרת כפתור</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background: #0353e9;"></div>
+          <div class="swatch-info"><code>--blue-hover</code> · #0353e9<br>hover של כפתור ראשי</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background: #002d9c;"></div>
+          <div class="swatch-info"><code>--blue-active</code> · #002d9c<br>מוגדר, אבל לא בשימוש באתר</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background: #f4f4f4;"></div>
+          <div class="swatch-info"><code>--bg</code> · #f4f4f4<br>רקע העמוד, hover של כפתור משני</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background: #ffffff;"></div>
+          <div class="swatch-info"><code>--layer</code> · #ffffff<br>רקע כרטיסים, כפתורים ושדות</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background: #e0e0e0;"></div>
+          <div class="swatch-info"><code>--border</code> · #e0e0e0<br>מסגרות כרטיסים וקווים מפרידים</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background: #8d8d8d;"></div>
+          <div class="swatch-info"><code>--border-strong</code> · #8d8d8d<br>מסגרת שדות, קו תחתון של הגרף</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background: #198038;"></div>
+          <div class="swatch-info"><code>--highlight</code> · #198038<br>הסוד הנכון בגרף</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background: #da1e28;"></div>
+          <div class="swatch-info"><code>--danger</code> · #da1e28<br>הודעות שגיאה</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background: #78a9ff;"></div>
+          <div class="swatch-info"><code>--bar</code> · #78a9ff<br>עמודות הגרף</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background: #c6c6c6;"></div>
+          <div class="swatch-info"><code>--disabled</code> · #c6c6c6<br>רקע וגבול של רכיב מושבת</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background: #8d8d8d;"></div>
+          <div class="swatch-info"><code>--disabled-text</code> · #8d8d8d<br>טקסט של רכיב מושבת</div>
+        </div>
+      </div>
+      <p class="doc-note">
+        שני ערכים מוגדרים ישירות בלי משתנה: <span class="ltr"><code>#ffffff</code></span> בטקסט של <span class="ltr"><code>button.primary</code></span>,
+        ו-<span class="ltr"><code>rgba(22, 22, 22, 0.5)</code></span> ברקע הרקע של הדיאלוג.
+      </p>
+    </section>
+
+    <section class="card doc-card">
+      <h2>טיפוגרפיה</h2>
+      <p class="doc-note">גופן אחד לכל האתר. אין גופן מותקן, והמערכת בוחרת את הגופן הזמין.</p>
+      <table class="spec-table">
+        <tr><th>שימוש</th><th>גודל</th><th>משקל</th><th>גובה שורה</th></tr>
+        <tr><td>גוף הטקסט (<span class="ltr"><code>body</code></span>)</td><td>15px</td><td>400</td><td>1.6</td></tr>
+        <tr><td>כותרת עמוד (<span class="ltr"><code>.top h1</code></span>)</td><td>26px</td><td>600</td><td>ברירת מחדל</td></tr>
+        <tr><td>כותרת כרטיס (<span class="ltr"><code>.card h2</code></span>, <span class="ltr"><code>.dialog-head h2</code></span>)</td><td>18px</td><td>600</td><td>ברירת מחדל</td></tr>
+        <tr><td>תוויות של שדות (<span class="ltr"><code>.controls label</code></span>)</td><td>14px</td><td>400</td><td>ברירת מחדל</td></tr>
+        <tr><td>שורת מצב (<span class="ltr"><code>.status</code></span>)</td><td>15px</td><td>600</td><td>ברירת מחדל</td></tr>
+        <tr><td>ערכים ותוויות בגרף (<span class="ltr"><code>.value</code>, <code>.label</code></span>)</td><td>12px</td><td>400 (600 לסוד הנכון)</td><td>ברירת מחדל</td></tr>
+        <tr><td>קוד (<span class="ltr"><code>.code-dialog pre</code></span>)</td><td>13px</td><td>400</td><td>1.5</td></tr>
+        <tr><td>כותרת תחתונה (<span class="ltr"><code>.foot</code></span>)</td><td>13px</td><td>400</td><td>ברירת מחדל</td></tr>
+      </table>
+      <p>
+        דוגמה לטקסט רגיל, <strong>טקסט מודגש (600)</strong>, <span class="muted">טקסט משני</span>, ונוסחה:
+        <span class="math">√N</span>.
+      </p>
+    </section>
+
+    <section class="card doc-card">
+      <h2>ריווח</h2>
+      <p class="doc-note">
+        אין סולם ריווח רשמי. הערכים הבאים הם אלה שמופיעים בפועל בקוד, והם מופיעים שוב ושוב.
+        שימו לב שהריווח מוגדר ב-<span class="ltr"><code>px</code></span> ישירות בכל כלל.
+      </p>
+      <table class="spec-table">
+        <tr><th>ערך</th><th>שימוש באתר</th></tr>
+        <tr><td><code>4px</code></td><td>רווח בין תווית לשדה (<code>.controls label</code>)</td></tr>
+        <tr><td><code>6px</code></td><td>רווח בין עמודות הגרף</td></tr>
+        <tr><td><code>8px</code></td><td>רווח בין כפתורים, בין פריטי רשימה, ופנים שדה בחירה אנכי</td></tr>
+        <tr><td><code>12px</code></td><td>פנים שדה קלט (אנכי), מרווח אחרי פסקאות וכותרות, תחתית שורת כפתורים</td></tr>
+        <tr><td><code>16px</code></td><td>רווח בין שדות, פנים כותרת תחתונה, מרווח בין כרטיסים, פנים <code>main</code></td></tr>
+        <tr><td><code>20px</code></td><td>פנים כרטיס (אנכי), פנים דיאלוג</td></tr>
+        <tr><td><code>24px</code></td><td>פנים כרטיס (אופקי), פנים כותרת עמוד, רווח בין <code>main</code> לעמוד</td></tr>
+        <tr><td><code>32px</code></td><td>פנים כותרת עמוד (אנכי)</td></tr>
+      </table>
+    </section>
+
+    <section class="card doc-card">
+      <h2>צללים וגובה (Elevation)</h2>
+      <p>
+        <strong>אין צללים באתר.</strong> אין <span class="ltr"><code>box-shadow</code></span> באף כלל.
+        ההבחנה בין שכבות נעשית בעזרת מסגרת של 1px בצבע <span class="ltr"><code>--border</code></span>,
+        ובעזרת רקע לבן (<span class="ltr"><code>--layer</code></span>) על רקע אפור (<span class="ltr"><code>--bg</code></span>).
+        הדיאלוג מקבל רקע כהה חצי-שקוף מאחוריו (<span class="ltr"><code>::backdrop</code></span>).
+      </p>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 2 + 3. רכיבים עם דוגמאות חיות וקוד                           -->
+    <!-- ============================================================ -->
+
+    <section class="card doc-card">
+      <h2>2. כפתורים</h2>
+      <p>
+        שני סוגים: כפתור רגיל (מסגרת כחולה, רקע לבן) וכפתור ראשי (<span class="ltr"><code>class="primary"</code></span>, רקע כחול).
+        שניהם מקבלים רקע אפור כשהם מושבתים.
+      </p>
+
+      <h3>דוגמה חיה</h3>
+      <div class="buttons">
+        <button type="button">ברירת מחדל</button>
+        <button type="button" class="primary">ראשי</button>
+        <button type="button" disabled>מושבת</button>
+        <button type="button" class="primary" disabled>ראשי מושבת</button>
+      </div>
+      <p class="doc-note">כדי לראות את מצב ה-hover, העבירו את העכבר מעל הכפתור. לכפתור ראשי ה-hover משתנה ל-<span class="ltr"><code>--blue-hover</code></span>.</p>
+
+      <h3>מצבים</h3>
+      <table class="spec-table">
+        <tr><th>מצב</th><th>מוגדר ב-CSS?</th><th>איך נראה</th></tr>
+        <tr><td>Default</td><td>כן</td><td>רקע לבן, מסגרת <span class="ltr"><code>--blue</code></span>, טקסט <span class="ltr"><code>--blue</code></span></td></tr>
+        <tr><td>Hover</td><td>כן (לא על מושבת)</td><td>משני: רקע <span class="ltr"><code>--bg</code></span>. ראשי: רקע <span class="ltr"><code>--blue-hover</code></span></td></tr>
+        <tr><td>Active</td><td><strong>לא</strong></td><td>אין כלל <span class="ltr"><code>:active</code></span>. <span class="ltr"><code>--blue-active</code></span> מוגדר ולא משמש</td></tr>
+        <tr><td>Disabled</td><td>כן</td><td>רקע <span class="ltr"><code>--disabled</code></span>, טקסט <span class="ltr"><code>--disabled-text</code></span>, סמן <span class="ltr"><code>not-allowed</code></span></td></tr>
+      </table>
+
+      <h3>קוד</h3>
+      <pre class="doc-code"><code>&lt;button type="button"&gt;ברירת מחדל&lt;/button&gt;
+&lt;button type="button" class="primary"&gt;ראשי&lt;/button&gt;
+&lt;button type="button" disabled&gt;מושבת&lt;/button&gt;
+
+&lt;div class="buttons"&gt;
+  &lt;button type="button"&gt;...&lt;/button&gt;
+  &lt;button type="button" class="primary"&gt;...&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+    </section>
+
+    <section class="card doc-card">
+      <h2>שדות קלט</h2>
+      <p>
+        שדה מספר ו-<span class="ltr"><code>select</code></span> מקבלים אותו עיצוב. התווית נמצאת מעליהם בתוך <span class="ltr"><code>.controls</code></span>.
+      </p>
+
+      <h3>דוגמה חיה</h3>
+      <div class="controls">
+        <label>
+          כמות הסודות (2–1024)
+          <input type="number" min="2" max="1024" step="1" placeholder="למשל 8">
+        </label>
+        <label>
+          הסוד הנכון
+          <select>
+            <option>ספר</option>
+            <option>בית</option>
+          </select>
+        </label>
+        <label>
+          שדה מושבת
+          <select disabled>
+            <option>לא זמין</option>
+          </select>
+        </label>
+      </div>
+
+      <h3>קוד</h3>
+      <pre class="doc-code"><code>&lt;div class="controls"&gt;
+  &lt;label&gt;
+    כמות הסודות (2–1024)
+    &lt;input type="number" min="2" max="1024" step="1" placeholder="למשל 8"&gt;
+  &lt;/label&gt;
+  &lt;label&gt;
+    הסוד הנכון
+    &lt;select&gt;
+      &lt;option&gt;ספר&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/label&gt;
+&lt;/div&gt;</code></pre>
+
+      <p class="doc-note">
+        <strong>שדה טקסט (textarea):</strong> לא קיים באתר, ואין לו עיצוב מוגדר. כדי להוסיף אותו צריך להרחיב את הכלל של <span class="ltr"><code>select</code></span> ב-<span class="ltr"><code>style.css</code></span>.
+      </p>
+    </section>
+
+    <section class="card doc-card">
+      <h2>דיאלוגים וחלונות קופצים (Modal)</h2>
+      <p>
+        משתמשים באלמנט <span class="ltr"><code>&lt;dialog&gt;</code></span> עם המחלקה <span class="ltr"><code>code-dialog</code></span>.
+        הפתיחה נעשית ב-<span class="ltr"><code>showModal()</code></span>, כך שהרקע נעשה כהה והמיקוד נשאר בתוך הדיאלוג. Esc סוגר אותו.
+      </p>
+
+      <h3>דוגמה חיה</h3>
+      <div class="buttons">
+        <button type="button" id="demoOpen">פתיחת דיאלוג לדוגמה</button>
+      </div>
+      <dialog id="demoDialog" class="code-dialog" aria-labelledby="demoTitle">
+        <header class="dialog-head">
+          <h2 id="demoTitle">כותרת הדיאלוג</h2>
+          <button type="button" id="demoClose">סגירה</button>
+        </header>
+        <p class="muted">זה תוכן לדוגמה בתוך דיאלוג.</p>
+        <pre dir="ltr"><code>print("שלום")</code></pre>
+        <div class="buttons">
+          <button type="button" class="primary">אישור</button>
+        </div>
+        <p class="status" aria-live="polite">שורת מצב בתוך הדיאלוג.</p>
+      </dialog>
+
+      <h3>קוד</h3>
+      <pre class="doc-code"><code>&lt;button type="button" id="openBtn"&gt;פתיחה&lt;/button&gt;
+
+&lt;dialog id="myDialog" class="code-dialog" aria-labelledby="myTitle"&gt;
+  &lt;header class="dialog-head"&gt;
+    &lt;h2 id="myTitle"&gt;כותרת&lt;/h2&gt;
+    &lt;button type="button" id="closeBtn"&gt;סגירה&lt;/button&gt;
+  &lt;/header&gt;
+  &lt;p class="muted"&gt;תוכן&lt;/p&gt;
+&lt;/dialog&gt;
+
+&lt;script&gt;
+  document.getElementById("openBtn").addEventListener("click", () =&gt; myDialog.showModal());
+  document.getElementById("closeBtn").addEventListener("click", () =&gt; myDialog.close());
+&lt;/script&gt;</code></pre>
+    </section>
+
+    <section class="card doc-card">
+      <h2>כרטיסים (Cards)</h2>
+      <p>
+        כרטיס הוא <span class="ltr"><code>&lt;section class="card"&gt;</code></span>. הוא מקבל רקע לבן, מסגרת, פנים ומרווח תחתון.
+        הכותרת בתוכו היא <span class="ltr"><code>h2</code></span>, והפסקאות והרשימות מקבלות מרווח אוטומטי.
+      </p>
+
+      <h3>דוגמה חיה</h3>
+      <div class="card">
+        <h2>כותרת כרטיס מקוננ</h2>
+        <p>זה כרטיס בתוך כרטיס. הוא מקבל את אותו עיצוב כמו כרטיסי העמוד.</p>
+      </div>
+
+      <h3>קוד</h3>
+      <pre class="doc-code"><code>&lt;section class="card"&gt;
+  &lt;h2&gt;כותרת&lt;/h2&gt;
+  &lt;p&gt;תוכן הכרטיס.&lt;/p&gt;
+&lt;/section&gt;</code></pre>
+    </section>
+
+    <section class="card doc-card">
+      <h2>רשימות וטבלאות</h2>
+      <p>
+        <strong>רשימות:</strong> <span class="ltr"><code>ul</code></span> ו-<span class="ltr"><code>ol</code></span> בתוך כרטיס מקבלים מרווח אוטומטי בין הפריטים.
+      </p>
+
+      <h3>דוגמה חיה</h3>
+      <ul>
+        <li>פריט ראשון ברשימה</li>
+        <li>פריט שני ברשימה</li>
+      </ul>
+      <ol>
+        <li>שלב ראשון</li>
+        <li>שלב שני</li>
+      </ol>
+
+      <h3>קוד</h3>
+      <pre class="doc-code"><code>&lt;ul&gt;
+  &lt;li&gt;פריט ראשון ברשימה&lt;/li&gt;
+  &lt;li&gt;פריט שני ברשימה&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+
+      <p class="doc-note">
+        <strong>טבלאות:</strong> לא קיימות באתר כרכיב של האתר. הטבלה שבעמוד זה היא כלי תיעוד בלבד, והיא מוגדרת ב-<span class="ltr"><code>&lt;style&gt;</code></span> של העמוד הזה.
+      </p>
+    </section>
+
+    <section class="card doc-card">
+      <h2>הודעות ואזהרות</h2>
+      <p>
+        באתר יש שני סוגים של הודעות בלבד: הודעת שגיאה (<span class="ltr"><code>.error</code></span>, בצבע <span class="ltr"><code>--danger</code></span>)
+        ושורת מצב (<span class="ltr"><code>.status</code></span>, מודגשת). אין סוגים של הצלחה או מידע.
+      </p>
+
+      <h3>דוגמה חיה</h3>
+      <p class="error" aria-live="polite">יש להזין מספר שלם בין 2 ל־1024.</p>
+      <p class="status" aria-live="polite">סיבוב 1 מתוך 2 מומלצים.</p>
+
+      <h3>קוד</h3>
+      <pre class="doc-code"><code>&lt;p class="error" id="errorLine" aria-live="polite"&gt;&lt;/p&gt;
+&lt;p class="status" id="statusLine" aria-live="polite"&gt;&lt;/p&gt;</code></pre>
+    </section>
+
+    <section class="card doc-card">
+      <h2>ניווט</h2>
+      <p>
+        <strong>אין תפריט ניווט באתר.</strong> האתר הוא עמוד יחיד. המבנה העליון והתחתון הוא כותרת העמוד (<span class="ltr"><code>.top</code></span>)
+        וכותרת תחתונה (<span class="ltr"><code>.foot</code></span>). הן מוצגות כאן כדוגמה.
+      </p>
+
+      <h3>כותרת עמוד (<span class="ltr"><code>.top</code></span>)</h3>
+      <pre class="doc-code"><code>&lt;header class="top"&gt;
+  &lt;h1&gt;כותרת העמוד&lt;/h1&gt;
+  &lt;p class="lead"&gt;תיאור קצר&lt;/p&gt;
+&lt;/header&gt;</code></pre>
+
+      <h3>כותרת תחתונה (<span class="ltr"><code>.foot</code></span>)</h3>
+      <pre class="doc-code"><code>&lt;footer class="foot"&gt;
+  &lt;p&gt;טקסט בכותרת התחתונה&lt;/p&gt;
+&lt;/footer&gt;</code></pre>
+    </section>
+
+    <section class="card doc-card">
+      <h2>גרף עמודות (רכיב ייחודי לאתר)</h2>
+      <p>
+        הגרף מורכב מ-<span class="ltr"><code>.chart</code></span> (המיכל), <span class="ltr"><code>.column</code></span> לכל עמודה,
+        <span class="ltr"><code>.bar</code></span> לעמודה עצמה, ו-<span class="ltr"><code>.value</code></span> ו-<span class="ltr"><code>.label</code></span> לטקסטים.
+        העמודה של הסוד הנכון מקבלת <span class="ltr"><code>.marked</code></span>. גובה העמודה נקבע בסקריפט לפי ההסתברות.
+      </p>
+
+      <h3>דוגמה חיה</h3>
+      <div class="chart" aria-label="דוגמה לגרף">
+        <div class="column" style="height: 100%;">
+          <div class="value">12.5%</div>
+          <div class="bar" style="height: 25%;"></div>
+          <div class="label">ספר</div>
+        </div>
+        <div class="column marked" style="height: 100%;">
+          <div class="value">94.5%</div>
+          <div class="bar" style="height: 100%;"></div>
+          <div class="label">בית</div>
+        </div>
+        <div class="column" style="height: 100%;">
+          <div class="value">0.0%</div>
+          <div class="bar" style="height: 0%;"></div>
+          <div class="label">כלב</div>
+        </div>
+      </div>
+
+      <h3>קוד</h3>
+      <pre class="doc-code"><code>&lt;div class="chart"&gt;
+  &lt;div class="column marked"&gt;
+    &lt;div class="value"&gt;94.5%&lt;/div&gt;
+    &lt;div class="bar" style="height: 100%;"&gt;&lt;/div&gt;
+    &lt;div class="label"&gt;בית&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </section>
+
+    <section class="card doc-card">
+      <h2>נוסחאות</h2>
+      <p>
+        נוסחה בתוך טקסט עברי נכתבת ב-<span class="ltr"><code>&lt;span class="math"&gt;</code></span>. המחלקה מכריחה כיוון שמאל-לימין ומשתמשת בגופן נטוי.
+      </p>
+      <h3>דוגמה חיה</h3>
+      <p>השורש של N הוא <span class="math">√N</span>, ו-<span class="math">sin²θ = 1 ÷ N</span>.</p>
+      <h3>קוד</h3>
+      <pre class="doc-code"><code>&lt;span class="math"&gt;√N&lt;/span&gt;</code></pre>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 4 + 5. RTL ואחידות                                           -->
+    <!-- ============================================================ -->
+
+    <section class="card doc-card">
+      <h2>נושא RTL</h2>
+      <p>
+        העמוד מוגדר ב-<span class="ltr"><code>&lt;html lang="he" dir="rtl"&gt;</code></span>. הכיוון נשמר בכל הרכיבים בזכות תכונות כמו
+        <span class="ltr"><code>flex</code></span>, שמתהפכות אוטומטית.
+      </p>
+      <p>
+        <strong>קוד ו-LTR:</strong> כל בלוק קוד מוגדר עם <span class="ltr"><code>direction: ltr</code></span>, כך שהקוד נשאר קריא.
+        כל נוסחה מוגדרת LTR (המחלקה <span class="ltr"><code>.math</code></span>). כך גם מספרים ותווים לטיניים בתוך טקסט עברי.
+      </p>
+      <p>
+        <strong>פריסה:</strong> ב-<span class="ltr"><code>style.css</code></span> אין ערכי <span class="ltr"><code>left</code></span> או <span class="ltr"><code>right</code></span> לריווח או למסגרות.
+        הכיוון נקבע על ידי <span class="ltr"><code>dir="rtl"</code></span> ועל ידי <span class="ltr"><code>flex</code></span>. ה-<span class="ltr"><code>text-align: left</code></span> היחיד הוא בתוך בלוק הקוד, בכוונה.
+      </p>
+    </section>
+
+    <section class="card doc-card">
+      <h2>אחידות ושימוש חוזר</h2>
+      <ul>
+        <li>כל הרכיבים מוגדרים ב-<span class="ltr"><code>style.css</code></span>. אין צורך בעיצוב נוסף בכל עמוד.</li>
+        <li>כשמשנים קובץ CSS, מעלים את מספר הגרסה ב-<span class="ltr"><code>?v=</code></span> בקישור, כדי שהדפדפן לא ישתמש בגרסה ישנה.</li>
+        <li>אין <span class="ltr"><code>style</code></span> מוטמע בתוך העמוד הראשי. ה-<span class="ltr"><code>style</code></span> היחיד בעמוד זה משמש רק לתיעוד.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>מערכת העיצוב של תת-הפרויקט גרובר.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var dialog = document.getElementById("demoDialog");
+      document.getElementById("demoOpen").addEventListener("click", function () {
+        dialog.showModal();
+      });
+      document.getElementById("demoClose").addEventListener("click", function () {
+        dialog.close();
+      });
+    })();
+  </script>
+</body>
+</html>

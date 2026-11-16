@@ -50,6 +50,24 @@ ibmcloud ce app logs --name shor-demo
 ibmcloud ce app update --name shor-demo --build-source https://github.com/avivizel/shor-demo --build-strategy dockerfile
 ```
 
+## גישה ציבורית (רק עם התחברות ואישור בעל האבטחה)
+
+אסור לשנות ל-`--visibility public` לפני שכל התנאים כאן מתקיימים:
+
+1. יש אישור בכתב מבעל האבטחה לחשיפה ציבורית.
+2. הוגדר ספק OIDC (IBM App ID או IBMid) עם כתובת חזרה `https://<כתובת-האפליקציה>/auth/callback`.
+3. הסודות נשמרו ב-Code Engine ולא בקוד. שורות נוספות בקובץ `.env` המקומי (מחוץ לגיט):
+   `OIDC_DISCOVERY_URL`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_REDIRECT_URI`, `SECRET_KEY` (ערך אקראי וארוך),
+   ולבחירה `OIDC_ALLOWED_EMAIL_DOMAINS` (למשל `il.ibm.com,ibm.com`).
+4. הוגדר גם `SHOR_DEMO_REQUIRE_AUTH=1`. אם ההתחברות לא הוגדרה כראוי, האפליקציה מחזירה 503 ולא נפתחת.
+
+```powershell
+ibmcloud ce secret update --name shor-demo-secrets --from-env-file .env
+ibmcloud ce app update --name shor-demo --env-from-secret shor-demo-secrets --env SHOR_DEMO_REQUIRE_AUTH=1 --visibility public
+```
+
+אחרי הפריסה בדקו: בלי התחברות הדף מפנה ל-`/login`, וקריאות ל-`/api/*` מחזירות 401.
+
 ## החלפת מפתח
 
 ```powershell

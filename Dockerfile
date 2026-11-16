@@ -5,9 +5,10 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app.py rsa_toy.py shor_local.py watsonx_explainer.py ./
+COPY app.py auth.py rsa_toy.py shor_local.py watsonx_explainer.py ./
 COPY static ./static
 COPY templates ./templates
+COPY grover ./grover
 
 # משתמש לא-root
 USER 1001

@@ -13,8 +13,9 @@ import threading
 import webbrowser
 from pathlib import Path
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_from_directory
 
+from auth import init_auth
 from rsa_toy import ToyRsaError, encrypt_message
 from shor_local import ShorFailed, run_shor
 from watsonx_explainer import MAX_QUESTION_LENGTH, ExplainerError, explain
@@ -23,6 +24,7 @@ ROOT = Path(__file__).resolve().parent
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+init_auth(app)
 
 
 def _source(filename):
@@ -32,6 +34,11 @@ def _source(filename):
 @app.get("/")
 def index():
     return render_template("index.html")
+
+
+@app.get("/grover/")
+def grover():
+    return send_from_directory(ROOT / "grover", "index.html")
 
 
 @app.get("/favicon.ico")
