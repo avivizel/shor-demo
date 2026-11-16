@@ -41,6 +41,11 @@ def grover():
     return send_from_directory(ROOT / "grover", "index.html")
 
 
+@app.get("/grover/<path:filename>")
+def grover_asset(filename):
+    return send_from_directory(ROOT / "grover", filename)
+
+
 @app.get("/favicon.ico")
 def favicon():
     return "", 204
