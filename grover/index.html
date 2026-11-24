@@ -1,29 +1,29 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>איך אלגוריתם גרובר מוצא סוד אחד מתוך הרבה</title>
+  <title>אלגוריתם גרובר: חיפוש קוונטי, גאומטריה ועמידות לרעש</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans+Hebrew:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/style.css?v=6">
+  <link rel="stylesheet" href="/static/style.css?v=9">
 </head>
 <body>
   <header class="shell">
     <div class="shell-bar">
-      <p class="eyebrow">מדגים לימודי להצפנה</p>
+      <p class="eyebrow">מדגים לימודי לחיפוש ולהצפנה קוונטית</p>
       <nav class="top-nav" aria-label="ניווט בין הדפים">
-        <a href="/">שור</a>
-        <a href="/grover/" aria-current="page">גרובר</a>
+        <a href="/">שור (פירוק לגורמים)</a>
+        <a href="/grover/" aria-current="page">גרובר (חיפוש במסד נתונים)</a>
       </nav>
     </div>
     <div class="page-heading">
-      <h1>איך אלגוריתם גרובר מוצא סוד אחד מתוך הרבה</h1>
+      <h1>אלגוריתם גרובר: חיפוש קוונטי, גאומטריה ועמידות לרעש</h1>
       <p class="lede">
-        נניח שיש הרבה סודות, ורק אחד מהם נכון. המכונה יכולה לבדוק סוד אחד בכל פעם.
-        גרובר מוצא את הסוד הנכון בהרבה פחות בדיקות מהדרך הרגילה.
-        אפשר לנסות הכול בדפדפן, בלי מחשב קוונטי.
+        כיצד מחשב קוונטי מוצא פריט בודד מתוך מסד נתונים לא-ממוין בסיבוכיות של <span class="math">√N</span> בדיקות בלבד,
+        מהי המשמעות הגאומטרית של הגברת אמפליטודה (Amplitude Amplification), וכיצד רעש ואיבוד קוהרנטיות משפיעים על החיפוש.
+        ההדגמה רצה מקומית בדפדפן לפי מודל המאמר של Khan &amp; Faryad (2026).
       </p>
     </div>
   </header>
@@ -31,160 +31,238 @@
   <main>
     <section class="card" id="problem">
       <p class="step">שלב 1</p>
-      <h2>מה הבעיה?</h2>
+      <h2>מהי בעיית החיפוש הלא-ממוין?</h2>
+      <button type="button" class="secondary explain-trigger-btn" data-explain-step="1">💡 הסבר פשוט בגובה העיניים</button>
       <p>
-        נניח שיש לנו <strong>N</strong> סודות, ואחד מהם הוא "הסוד הנכון". יש לנו מכונה שיודעת לבדוק סוד <strong>אחד</strong> בכל פעם,
-        ולומר אם הוא נכון או לא. אין לנו דרך לדעת מראש איזה סוד נכון, והמטרה היא למצוא אותו.
+        נניח שיש לנו מסד נתונים של <span class="math">N = 2ⁿ</span> פריטים (סודות או מפתחות הצפנה), שבו קיים פריט יחיד <span class="math">|w⟩</span> המסומן כנכון.
+        לרשותנו "קופסה שחורה" (אורקל) שיודעת לבדוק פריט מסוים ולומר אם הוא הפריט הנכון.
       </p>
       <ul class="plain">
         <li>
-          <strong>בדרך הרגילה:</strong> במקרה הגרוע בודקים את כל ה־N הסודות, אחד אחרי השני. אם יש מיליון סודות, צריך מיליון בדיקות.
+          <strong>חיפוש קלאסי (Classical Search):</strong> במקרה הגרוע יש לבדוק את כל <span class="math">N</span> הפריטים, ובממוצע נדרשות <span class="math">N / 2</span> שאילתות.
+          אם יש מיליון פריטים (<span class="math">N = 1,000,000</span>), נצטרך כ־500,000 בדיקות.
         </li>
         <li>
-          <strong>בדרך של גרובר:</strong> צריך בערך <span class="math">√N</span> בדיקות. אם יש מיליון סודות, מספיק כ־1,000 בדיקות.
+          <strong>אלגוריתם גרובר (Grover's Algorithm):</strong> משיג האצה ריבועית (Quadratic Speedup) ודורש רק כ־<span class="math">(π / 4) × √N</span> שאילתות.
+          עבור מיליון פריטים, גרובר מוצא את הפריט הנכון בכ־<strong>785 בדיקות בלבד</strong>!
         </li>
       </ul>
       <p>
-        <span class="math">√N</span> היא השורש הריבועי של N, כלומר המספר שכשמכפילים אותו בעצמו מקבלים את N.
-        למשל, <span class="math">√16 = 4</span> כי <span class="math">4 × 4 = 16</span>.
+        הוכח מתמטית כי שום אלגוריתם קלאסי או קוונטי אינו יכול לבצע חיפוש במסד לא-ממוין מהר יותר מ־<span class="math">O(√N)</span>.
       </p>
     </section>
 
-    <section class="card" id="weights">
+    <section class="card" id="geometry">
       <p class="step">שלב 2</p>
-      <h2>הרעיון: "משקלים" במקום הסתברויות</h2>
+      <h2>המישור הגאומטרי: אמפליטודות במקום הסתברויות</h2>
+      <button type="button" class="secondary explain-trigger-btn" data-explain-step="2">💡 הסבר פשוט בגובה העיניים</button>
       <p>
-        במחשב קוונטי, לכל סוד יש <strong>משקל</strong>. קוראים לו <strong>אמפליטודה</strong>. ההסתברות לקבל סוד מסוים
-        מחושבת לפי המשקל שלו: <strong>הסתברות = משקל × משקל</strong>.
+        במחשב קוונטי, המצב של <span class="math">n</span> קיוביטים מתואר על ידי וקטור אמפליטודות (משקלים). ההסתברות למדוד מצב מסוים שווה לריבוע הערך המוחלט של האמפליטודה שלו:
+        <span class="math">P(x) = |a_x|²</span>.
       </p>
       <p>
-        ההבדל החשוב: המשקל יכול להיות <strong>שלילי</strong>. לכן משקלים יכולים <strong>להתחזק</strong> או <strong>להתבטל</strong>,
-        בדיוק כמו גלים במים שנפגשים. גם משקל שלילי של 0.5 נותן הסתברות של 0.25, כמו משקל חיובי של 0.5.
+        התובנה המרכזית של גרובר היא שכל תהליך החיפוש מתרחש בתוך <strong>מישור דו-ממדי</strong> הנפרש על ידי שני וקטורים אורתונורמליים:
+      </p>
+      <ul class="plain">
+        <li><span class="math">|w⟩</span> — המצב המסומן (הסוד שאותו מחפשים).</li>
+        <li><span class="math">|w^⊥⟩</span> — הסופרפוזיציה האחידה של כל <span class="math">N - 1</span> המצבים הלא-מסומנים: <span class="math">|w^⊥⟩ = (1 / √(N-1)) Σ_{x ≠ w} |x⟩</span>.</li>
+      </ul>
+      <p>
+        המצב ההתחלתי <span class="math">|s⟩</span> מוכן בעזרת שכבת שערי Hadamard (<span class="math">H^{\otimes n} |0⟩^{\otimes n}</span>), ומייצג סופרפוזיציה אחידה שבה לכל מצב אמפליטודה שווה של <span class="math">1 / √N</span>.
+        במישור הגאומטרי, המצב <span class="math">|s⟩</span> מתואר כזווית התחלתית <span class="math">α</span> מעל ציר המצבים הלא-מסומנים:
+      </p>
+      <p class="math" style="text-align: center; font-size: 1.15rem; margin: 0.75rem 0;">
+        |s⟩ = cos(α) |w^⊥⟩ + sin(α) |w⟩, &nbsp;&nbsp; כאשר &nbsp;&nbsp; sin(α) = 1 / √N
       </p>
       <p>
-        גרובר משתמש בזה כדי <strong>להגדיל</strong> את המשקל של הסוד הנכון ולהקטין את המשקל של כל השאר.
+        כאשר <span class="math">N</span> גדול, הזווית <span class="math">α ≈ 1 / √N</span> היא קטנה מאוד, ורוב המשקל יושב על המצבים הלא-מסומנים. המטרה היא "לסובב" את הווקטור עד שיגיע לזווית של <span class="math">90°</span> (<span class="math">π/2</span> רדיאנים), שבה הוא מתלכד עם <span class="math">|w⟩</span>.
       </p>
     </section>
 
-    <section class="card" id="two-steps">
+    <section class="card" id="reflections">
       <p class="step">שלב 3</p>
-      <h2>שני שלבים שחוזרים על עצמם</h2>
+      <h2>שני שיקופים יוצרים סיבוב מדויק של 2α</h2>
+      <button type="button" class="secondary explain-trigger-btn" data-explain-step="3">💡 הסבר פשוט בגובה העיניים</button>
       <p>
-        כל "סיבוב" של גרובר מורכב משני שלבים. אפשר לקרוא לכל סיבוב גם "איטרציה".
+        כל איטרציה של גרובר <span class="math">G = V · U_f</span> מורכבת מהפעלת שני אופרטורים עוקבים, שכל אחד מהם הוא <strong>שיקוף גאומטרי</strong>:
       </p>
       <ol class="plain">
         <li>
-          <strong>שלב א: הפיכת הסימן של הסוד הנכון.</strong> המכונה שיודעת מי הסוד הנכון הופכת את הסימן של המשקל שלו
-          (מ־חיובי לשלילי או להפך). המשקלים של כל השאר לא משתנים.
+          <strong>שיקוף ראשון — האורקל (<span class="math">U_f = I - 2|w⟩⟨w|</span>):</strong>
+          האורקל הופך את הפאזה של המצב המסומן בלבד (<span class="math">|w⟩ → -|w⟩</span>) ואינו משנה את שאר המצבים.
+          במישור הגאומטרי, זוהי השתקפות של הווקטור סביב ציר המצבים הלא-מסומנים <span class="math">|w^⊥⟩</span> (הזווית משתקפת מ־<span class="math">+θ</span> ל־<span class="math">-θ</span>).
         </li>
         <li>
-          <strong>שלב ב: היפוך סביב הממוצע.</strong> לכל סוד, מחשבים את המשקל החדש כך:
-          <span class="math">2 × (הממוצע של כל המשקלים) − (המשקל הנוכחי)</span>.
-          בשלב הזה הסוד הנכון, שהסימן שלו הפוך, מקבל משקל <strong>גבוה מאוד</strong>.
-          כל השאר מקבלים משקל <strong>קטן יותר</strong>.
+          <strong>שיקוף שני — אופרטור הדיפוזיה (<span class="math">V = 2|s⟩⟨s| - I = H^{\otimes n} U_0 H^{\otimes n}</span>):</strong>
+          הדיפוזיה מבצעת שיקוף סביב המצב ההתחלתי <span class="math">|s⟩</span> (שנמצא בזווית <span class="math">α</span>). פעולה זו שקולה להיפוך כל אמפליטודה סביב הממוצע של כלל האמפליטודות:
+          <span class="math">a_i' = 2 × (הממוצע) - a_i</span>.
         </li>
       </ol>
       <div class="example">
-        <p><strong>דוגמה קטנה עם 4 סודות:</strong> בהתחלה לכולם יש משקל 0.5. הסוד הנכון הוא הרביעי.</p>
-        <ul class="plain">
-          <li>שלב א: משקלים <span class="math">0.5, 0.5, 0.5, −0.5</span>. רק הרביעי הפך סימן.</li>
-          <li>ממוצע: <span class="math">0.25</span>.</li>
-          <li>שלב ב: לסודות 1–3 המשקל הוא <span class="math">2 × 0.25 − 0.5 = 0</span>. לסוד הנכון המשקל הוא <span class="math">2 × 0.25 − (−0.5) = 1</span>.</li>
-          <li>התוצאה: <span class="math">0, 0, 0, 1</span>. ההסתברות לסוד הנכון היא <span class="math">1 × 1 = 1</span>, כלומר 100%.</li>
-        </ul>
+        <p><strong>התוצאה המשולבת של שני השיקופים:</strong></p>
+        <p>
+          שיקוף סביב ציר <span class="math">|w^⊥⟩</span> (זווית 0) ואחריו שיקוף סביב ציר <span class="math">|s⟩</span> (זווית <span class="math">α</span>)
+          מסובב את וקטור המצב <strong>בדיוק ב־<span class="math">2α</span></strong> לעבר המצב הנכון <span class="math">|w⟩</span> בכל איטרציה!
+        </p>
+        <p>
+          לאחר <span class="math">r</span> איטרציות, זווית המצב הכוללת היא <span class="math">θ_r = (2r + 1)α</span>, וההסתברות למדוד את המצב הנכון היא בדיוק <span class="math">P_r = \sin²((2r + 1)α)</span>.
+        </p>
       </div>
     </section>
 
     <section class="card" id="algorithm">
       <p class="step">שלב 4</p>
-      <h2>כל האלגוריתם, שלב אחר שלב</h2>
-      <ol class="plain">
-        <li>
-          <strong>התחלה:</strong> נותנים לכל הסודות אותו משקל. כך לכל סוד יש אותה הסתברות, שהיא <span class="math">1 ÷ N</span>.
-          במחשב קוונטי זה נעשה בעזרת פעולה שנקראת שער Hadamard.
-        </li>
-        <li>
-          <strong>סיבובים:</strong> מבצעים את שני השלבים מסעיף 3 שוב ושוב. מספר הסיבובים הטוב ביותר הוא בערך
-          <span class="math">(π ÷ 4) × √N</span>. π הוא מספר קבוע שבערך שווה ל־3.14.
-        </li>
-        <li>
-          <strong>מדידה:</strong> בסוף מודדים את התוצאה. בהסתברות גבוהה מאוד נקבל את הסוד הנכון.
-        </li>
-      </ol>
+      <h2>מספר הסיבובים המיטבי ותופעת סיבוב היתר (Overshoot)</h2>
+      <button type="button" class="secondary explain-trigger-btn" data-explain-step="4">💡 הסבר פשוט בגובה העיניים</button>
+      <p>
+        מכיוון שכל סיבוב מקדם את הזווית ב־<span class="math">2α</span>, ההסתברות המרבית מושגת כאשר הזווית הכוללת קרובה ביותר ל־<span class="math">π/2</span> (<span class="math">90°</span>):
+      </p>
+      <p class="math" style="text-align: center; font-size: 1.15rem; margin: 0.75rem 0;">
+        (2r₀ + 1)α ≈ π / 2 &nbsp;&nbsp; ⟹ &nbsp;&nbsp; r₀ ≈ (π / 4α) - 1/2 ≈ (π / 4) √N - 1/2
+      </p>
       <aside class="note">
-        <strong>שימו לב.</strong>
-        אם עושים יותר מדי סיבובים, ההסתברות <strong>יורדת</strong> שוב. לכן חשוב לעצור בזמן.
+        <strong>זהירות מסיבוב יתר (Overshoot):</strong>
+        אלגוריתם גרובר הוא תנועה סיבובית מחזורית במרחב הילברט. אם נמשיך לבצע איטרציות מעבר ל־<span class="math">r₀</span>,
+        הווקטור "יעקוף" את ציר <span class="math">|w⟩</span> וההסתברות למצוא את הסוד <strong>תרד שוב</strong> לעבר האפס. לכן עצירה בזמן המדויק היא קריטית.
       </aside>
     </section>
 
     <section class="card" id="demo">
       <p class="step">שלב 5</p>
-      <h2>ההדגמה: נסו בעצמכם</h2>
+      <h2>הדמיה אינטראקטיבית: מעקב גאומטרי וסימולציית רעש</h2>
+      <button type="button" class="secondary explain-trigger-btn" data-explain-step="5">💡 הסבר פשוט בגובה העיניים</button>
       <p class="hint">
-        ההדגמה מחשבת את המשקלים בדיוק לפי השלבים שראיתם. אין צורך במחשב קוונטי, והכול רץ בדפדפן.
+        הסימולטור מחשב את וקטור האמפליטודות, הזווית במישור <span class="math">(2r+1)α</span> וההסתברות התאורטית.
+        ניתן לבחון את התנהגות האלגוריתם ללא רעש, או להפעיל מודל רעש דפולריזציה לפי משוואה (30) במאמר.
       </p>
       <ol class="plain">
-        <li>הזינו כמה סודות אתם רוצים, מ־2 עד 1024.</li>
-        <li>לחצו על "יצירת סודות אקראיים". המחשב יבנה רשימה של מילים עבריות אקראיות.</li>
-        <li>בחרו איזה סוד יהיה הסוד הנכון.</li>
-        <li>לחצו על "סיבוב הבא" ושימו לב איך העמודה של הסוד הנכון גדלה בכל סיבוב.</li>
+        <li>הזינו את מספר הפריטים במסד הנתונים (<span class="math">2</span> עד <span class="math">1024</span>).</li>
+        <li>לחצו על "יצירת סודות אקראיים" ובחרו את הפריט המסומן <span class="math">|w⟩</span>.</li>
+        <li>בחרו רמת רעש אם ברצונכם לבחון את דעיכת הקוהרנטיות.</li>
+        <li>לחצו על "סיבוב הבא (איטרציה)" ועקבו אחר הזווית וההסתברויות בגרף.</li>
       </ol>
 
       <div class="controls">
         <div>
-          <label for="sizeInput">כמות הסודות (2–1024)</label>
-          <input type="number" id="sizeInput" min="2" max="1024" step="1" placeholder="למשל 8">
+          <label for="sizeInput">גודל המסד N (2–1024)</label>
+          <input type="number" id="sizeInput" min="2" max="1024" step="1" placeholder="למשל 16">
         </div>
         <div>
-          <label for="markedSelect">הסוד הנכון</label>
+          <label for="markedSelect">הפריט המסומן (|w⟩)</label>
           <select id="markedSelect" disabled></select>
+        </div>
+        <div>
+          <label for="noiseSelect">מודל רעש קוונטי (דפולריזציה לכל שכבת שערים)</label>
+          <select id="noiseSelect" disabled>
+            <option value="0">אידיאלי (ללא רעש, p = 0)</option>
+            <option value="0.01">רעש נמוך (p = 1% לשכבה)</option>
+            <option value="0.03">רעש בינוני (p = 3% לשכבה)</option>
+            <option value="0.06">רעש גבוה (p = 6% לשכבה)</option>
+          </select>
         </div>
       </div>
 
       <div class="buttons">
         <button id="generateBtn" type="button" class="primary">יצירת סודות אקראיים</button>
-        <button id="stepBtn" type="button" class="primary" disabled>סיבוב הבא</button>
-        <button id="resetBtn" type="button" class="secondary" disabled>התחלה מחדש</button>
-        <button id="codeBtn" type="button" class="secondary" disabled>הצגת קוד Qiskit</button>
+        <button id="stepBtn" type="button" class="primary" disabled>סיבוב הבא (איטרציה)</button>
+        <button id="resetBtn" type="button" class="secondary" disabled>איפוס למצב התחלתי</button>
+        <button id="codeBtn" type="button" class="secondary" disabled>הצגת קוד Qiskit מלא</button>
       </div>
 
       <p class="error" id="errorLine" hidden></p>
       <p class="status" id="statusLine">הזינו כמות סודות ולחצו על "יצירת סודות אקראיים".</p>
+      <p class="hint" id="geomInfo" style="margin-top: -0.25rem; font-weight: 600; color: var(--blue);"></p>
 
-      <div class="chart" id="chart" aria-label="ההסתברות לכל סוד"></div>
+      <div class="chart" id="chart" aria-label="התפלגות ההסתברויות"></div>
+    </section>
+
+    <section class="card" id="noise-theory">
+      <p class="step">שלב 6</p>
+      <h2>מה קורה כשיש רעש קוונטי? תובנות ממאמר המחקר</h2>
+      <button type="button" class="secondary explain-trigger-btn" data-explain-step="6">💡 הסבר פשוט בגובה העיניים</button>
+      <p>
+        במאמרם <em>"Loss of the quadratic speedup in Grover search under local and coherent noise"</em> (Khan &amp; Faryad, 2026),
+        החוקרים מוכיחים מתמטית כיצד תהליכי רעש ואיבוד קוהרנטיות שוחקים את ההאצה הריבועית של גרובר:
+      </p>
+
+      <ul class="plain">
+        <li>
+          <strong>הקפאת אמפליטודה מחוץ למישור (Amplitude Freezing):</strong>
+          המרחב נחלק למישור הדו-ממדי <span class="math">{|w^⊥⟩, |w⟩}</span> ולמרחב הניצב לו.
+          אופרטור גרובר פועל כהיפוך סימן פשוט על כל מצב שמחוץ למישור: <span class="math">G|χ⟩ = -|χ⟩</span> עבור <span class="math">|χ⟩ ⊥ |w^⊥⟩, |w⟩</span>.
+          משמעות הדבר: <strong>כל אמפליטודה שרעש דוחף אל מחוץ למישור — קופאת ולעולם אינה מוגברת שוב!</strong>
+        </li>
+        <li>
+          <strong>אסימטריה בין שגיאות ביט (Bit-flip X) ושגיאות פאזה (Phase-flip Z):</strong>
+          <br>
+          • <em>שגיאת פאזה (Z):</em> הורסת את הסופרפוזיציה הלא-מסומנת. היא קטלנית ביותר <strong>בתחילת החיפוש</strong> (<span class="math">P^(Z) ≈ \sin⁴θ</span>). שגיאת פאזה בודדת על קיוביט אחד מיד לאחר ה־Hadamard הראשון הורסת את החיפוש לחלוטין.
+          <br>
+          • <em>שגיאת ביט (X):</em> הופכת את המצב המסומן למצב לא-מסומן. היא קטלנית ביותר <strong>בסוף החיפוש</strong> (<span class="math">P^(X) ≈ \cos⁴θ</span>), כאשר רוב המשקל כבר התרכז ב־<span class="math">|w⟩</span>.
+          <br>
+          • <em>שגיאת Y:</em> שילוב של היפוך ביט ופאזה, הרסנית באופן מוחלט בכל שלב של הריצה.
+        </li>
+        <li>
+          <strong>הזזת נקודת העצירה המיטבית מוקדם יותר (<span class="math">r* &lt; r₀</span>):</strong>
+          ברעש דפולריזציה גלובלי, כל איטרציה כוללת 3 שכבות רעש, והמצב הקוהרנטי דועך כ־<span class="math">(1 - p_g)^{3r+1}</span>.
+          ההסתברות הכוללת היא:
+          <span class="math">P_r(p_g) = (1 - p_g)^{3r+1} \sin²((2r + 1)α) + \frac{1 - (1 - p_g)^{3r+1}}{N}</span>.
+          מכיוון שכל סיבוב נוסף צובר עוד רעש, <strong>הרווח מסיבוב נוסף מתקזז מול אובדן הקוהרנטיות</strong>, והאיטרציה המיטבית נסוגה לאחור:
+          <span class="math">r* ≈ r₀ - \frac{3 p_g (N - 1)}{8}</span>.
+        </li>
+        <li>
+          <strong>תקציב הרעש הנסבל (Noise Budget):</strong>
+          עבור רעש מקומי על קיוביטים בודדים, ההסתברות לשגיאה לכל קיוביט חייבת לדעוך כמו <span class="math">p \lesssim \frac{1}{c · n · √N}</span>.
+          הגורם <span class="math">n = \log_2 N</span> מציין שכל קיוביט נוסף במעגל מגדיל את ההסתברות לכשל ומחמיר את סף הרעש.
+        </li>
+        <li>
+          <strong>שגיאות סיבוב קוהרנטיות (Coherent Rotation Errors):</strong>
+          אי-דיוקים בכיול השערים גורמים לשגיאת זווית <span class="math">δ</span> באורקל ו־<span class="math">Δ</span> בדיפוזיה.
+          אי-ודאות הזווית מצטברת <strong>לינארית</strong> בעומק המעגל (<span class="math">2r(δ + Δ)</span>), ופותחת טווח שגיאה שמתרחב בכל סיבוב.
+        </li>
+      </ul>
     </section>
 
     <section class="card" id="math">
-      <p class="step">שלב 6</p>
-      <h2>קצת מתמטיקה (אופציונלי)</h2>
+      <p class="step">שלב 7</p>
+      <h2>הנוסחאות המתמטיות (סיכום)</h2>
+      <button type="button" class="secondary explain-trigger-btn" data-explain-step="7">💡 הסבר פשוט בגובה העיניים</button>
       <p>
-        נסמן <span class="math">sin θ = 1 ÷ √N</span>. אחרי <span class="math">k</span> סיבובים, ההסתברות לסוד הנכון היא
-        <span class="math">sin²((2k + 1) θ)</span>. אפשר לחשב את זה בעזרת טריגונומטריה, בלי לעבור על כל הסיבובים אחד אחד.
+        נסכם את המשוואות המדויקות לניתוח חיפוש גרובר:
       </p>
-      <p>
-        לדוגמה, עבור 8 סודות: אחרי סיבוב אחד ההסתברות כ־78%, ואחרי שני סיבובים כ־94.5%.
-        אחרי שלושה סיבובים היא יורדת לכ־33%. זו הסיבה שחשוב לעצור בזמן.
-      </p>
+      <ul class="plain">
+        <li><strong>זווית בסיס:</strong> <span class="math">α = \arcsin(1 / √N)</span></li>
+        <li><strong>מצב באיטרציה r:</strong> <span class="math">|ψ_r⟩ = \cos((2r + 1)α) |w^⊥⟩ + \sin((2r + 1)α) |w⟩</span></li>
+        <li><strong>הסתברות הצלחה נקייה:</strong> <span class="math">P_r^{(0)} = \sin²((2r + 1)α)</span></li>
+        <li><strong>מספר איטרציות מיטבי (ללא רעש):</strong> <span class="math">r₀ = \text{round}\left(\frac{\pi}{4\alpha} - \frac{1}{2}\right)</span></li>
+        <li><strong>עלות שאילתות צפויה (Expected Query Cost):</strong> <span class="math">Q(r) = r / P_r</span></li>
+      </ul>
     </section>
 
     <section class="card" id="crypto">
-      <p class="step">שלב 7</p>
-      <h2>למה זה חשוב להצפנה?</h2>
+      <p class="step">שלב 8</p>
+      <h2>משמעות לאבטחת מידע והצפנה</h2>
+      <button type="button" class="secondary explain-trigger-btn" data-explain-step="8">💡 הסבר פשוט בגובה העיניים</button>
       <p>
-        גרובר יכול לחפש סוד מתוך רשימה מהר יותר מהדרך הרגילה, ולכן הוא מאיץ התקפות על מפתחות של הצפנה סימטרית, כמו AES.
-        במקום לבדוק את כל המפתחות, צריך רק בערך שורש של מספר המפתחות.
+        אלגוריתם גרובר מאפשר לבצע חיפוש כוח-גס (Brute-Force) על מפתחות הצפנה סימטרית (כגון AES) ופונקציות גיבוב (Hash):
       </p>
-      <p>
-        אבל גרובר לא שובר את ההצפנה לגמרי, בניגוד לשור, שמפרק מספרים גדולים לגורמים ושובר את RSA.
-        כדי להתמודד עם גרובר, מספיק להשתמש במפתחות ארוכים יותר.
-      </p>
+      <ul class="plain">
+        <li>
+          <strong>AES-128:</strong> חיפוש קלאסי דורש <span class="math">2¹²⁸</span> בדיקות (בלתי אפשרי). גרובר מוריד את דרגת האבטחה האפקטיבית ל־<span class="math">2⁶⁴</span> פעולות.
+        </li>
+        <li>
+          <strong>ההגנה הנדרשת:</strong> הכפלת אורך המפתח! שימוש ב־<strong>AES-256</strong> מספק <span class="math">2¹²⁸</span> פעולות קוונטיות מול גרובר — רמת אבטחה שאינה ניתנת לפריצה גם בעידן הקוונטי.
+        </li>
+        <li>
+          <strong>מגבלות חומרה במציאות (NISQ):</strong> כפי שהוכיחו חאן ופריאד, בהיעדר תיקון שגיאות קוונטי מושלם, רעש ברמת המעגל שוחק את ההאצה ומחזיר את הסיבוכיות לסריקה לינארית <span class="math">Q* \approx 2 p_g N</span>.
+        </li>
+      </ul>
     </section>
 
     <section class="card" id="ask-card">
       <h2>שאלו את המסביר של watsonx.ai</h2>
       <p>
-        יש משהו שלא הבנתם? כתבו שאלה על גרובר, על סופרפוזיציה או על הדף הזה.
-        רק טקסט השאלה נשלח ל-watsonx.ai של IBM. הסימולטור הקוונטי ממשיך לרוץ מקומית.
+        יש משהו שלא הבנתם? כתבו שאלה על גרובר, שיקופים גאומטריים, סופרפוזיציה או השפעות הרעש הקוונטי.
+        רק טקסט השאלה נשלח ל-watsonx.ai של IBM.
       </p>
       <form id="ask-form">
         <label for="question">השאלה</label>
@@ -197,32 +275,49 @@
       <div class="example" id="ask-answer" hidden></div>
     </section>
 
-
     <footer class="sources">
-      <p>תת-פרויקט נפרד מ־shor-demo. הדף נפתח דרך השרת המקומי ב-/grover/. המסביר דורש שרת, ושאר הדף עובד גם בלעדיו.</p>
+      <p>
+        מבוסס על המאמר המדעי: <em>Imama Tul Birrah Khan &amp; Muhammad Faryad, "Loss of the quadratic speedup in Grover search under local and coherent noise", Department of Physics, LUMS (2026).</em>
+        הדף נפתח דרך השרת המקומי ב־<code>/grover/</code>.
+      </p>
     </footer>
   </main>
+
+  <!-- חלון קופץ להסבר פשוט לתלמידי כיתה ט' -->
+  <div id="explainModal" class="modal" hidden>
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="explainTitle">
+      <header class="modal-bar">
+        <div>
+          <h3 id="explainTitle">הסבר פשוט לתלמידים</h3>
+          <p class="hint" id="explainSubtitle">מושגי יסוד בלי נוסחאות מסובכות</p>
+        </div>
+        <button class="secondary" type="button" id="closeExplainBtn">סגירה</button>
+      </header>
+      <div class="modal-content" id="explainBody"></div>
+    </div>
+  </div>
 
   <div id="codeModal" class="modal" hidden>
     <div class="modal-backdrop" data-close="true"></div>
     <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="codeTitle">
       <header class="modal-bar">
         <div>
-          <h3 id="codeTitle">קוד Python עם Qiskit</h3>
-          <p class="hint">הקוד מריץ את אלגוריתם גרובר על מדמה קוונטי. צריך להתקין פעם אחת: <span class="math">pip install qiskit qiskit-aer</span></p>
+          <h3 id="codeTitle">קוד Python מלא עם Qiskit</h3>
+          <p class="hint">הקוד מיישם את אלגוריתם גרובר המדויק עם ניתוח גאומטרי והרצה על מדמה קוונטי מקומי: <span class="math">pip install qiskit qiskit-aer</span></p>
         </div>
         <button class="secondary" type="button" id="closeBtn">סגירה</button>
       </header>
       <pre class="code" dir="ltr"><code id="codeText"></code></pre>
       <div class="buttons">
         <button class="primary" type="button" id="copyBtn">העתקת הקוד</button>
-        <button class="secondary" type="button" id="downloadBtn">טעינת הקוד לקובץ grover_search.py</button>
+        <button class="secondary" type="button" id="downloadBtn">הורדת הקוד לקובץ grover_search.py</button>
       </div>
       <p class="status" id="copyStatus" aria-live="polite" hidden></p>
     </div>
   </div>
 
-  <script src="qiskit-code.js?v=2"></script>
-  <script src="app.js?v=4"></script>
+  <script src="qiskit-code.js?v=3"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>

@@ -480,6 +480,50 @@ select:disabled {
   border-bottom-color: var(--blue);
 }
 
+.explain-trigger-btn {
+  margin: 0.35rem 0 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--blue);
+  background: var(--info-bg);
+  border: 1px solid #c9deff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.explain-trigger-btn:hover {
+  background: #dbeafe;
+}
+
+.modal-content {
+  padding: 1.25rem 1.5rem;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+.explain-section {
+  margin-bottom: 1.25rem;
+}
+
+.explain-section:last-child {
+  margin-bottom: 0;
+}
+
+.explain-section h4 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--blue);
+}
+
+.explain-section p {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
 .top-nav a:focus-visible {
   outline: 2px solid var(--blue);
   outline-offset: 2px;
